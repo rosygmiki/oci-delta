@@ -17,6 +17,11 @@ type Logger interface {
 	Warning(format string, args ...interface{})
 }
 
+type SilentLogger struct{}
+
+func (SilentLogger) Debug(string, ...interface{})   {}
+func (SilentLogger) Warning(string, ...interface{}) {}
+
 var ociLayoutFileData = []byte(`{"imageLayoutVersion":"1.0.0"}`)
 
 type OCILayer struct {
