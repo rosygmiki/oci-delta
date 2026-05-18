@@ -105,8 +105,10 @@ podman() {
     command podman --root "$STORAGE_ROOT" --runroot "$STORAGE_RUN" --storage-driver "$STORAGE_DRIVER" "$@"
 }
 
-echo "  Building oci-delta..."
-make -C "$PROJECT_DIR" build -s
+if [ ! -x "$OCI_DELTA" ]; then
+    echo "ERROR: $OCI_DELTA not found — run 'make build' first"
+    exit 1
+fi
 
 # ============================================================
 # Create test data and images
