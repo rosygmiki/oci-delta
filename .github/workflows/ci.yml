@@ -26,45 +26,15 @@ jobs:
         with:
           go-version-file: go.mod
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y libglib2.0-dev libgpgme-dev libbtrfs-dev libdevmapper-dev libostree-dev
-      - name: Sync go.sum
-        run: go mod tidy
-      - name: Run unit tests
-        run: go test ./...
-
-  integration:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-      - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y libglib2.0-dev libgpgme-dev libbtrfs-dev libdevmapper-dev libostree-dev podman
       - name: Sync go.sum
         run: go mod tidy
       - name: Enable unprivileged user namespaces
         run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build
-        run: make build
-      - name: Run synthetic tests
-        run: python3 tests/test-synthetic.py
-      - name: Run integration tests
-        run: ./tests/integration-test.sh
+      - name: Run tests with coverage
+        run: make test-coverage
 
   test-fedora:
-    runs-on: ubuntu-latest
-    container: fedora:latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install dependencies
-        run: dnf install -y golang gcc glib2-devel gpgme-devel btrfs-progs-devel device-mapper-devel ostree-devel
-      - name: Sync go.sum
-        run: go mod tidy
-      - name: Run unit tests
-        run: go test ./...
-
-  integration-fedora:
     runs-on: ubuntu-latest
     container:
       image: fedora:latest
@@ -75,9 +45,5 @@ jobs:
         run: dnf install -y golang gcc glib2-devel gpgme-devel btrfs-progs-devel device-mapper-devel ostree-devel podman jq python3 make tar openssl
       - name: Sync go.sum
         run: go mod tidy
-      - name: Build
-        run: make build
-      - name: Run synthetic tests
-        run: python3 tests/test-synthetic.py
-      - name: Run integration tests
-        run: ./tests/integration-test.sh
+      - name: Run tests with coverage
+        run: make test-coverage
