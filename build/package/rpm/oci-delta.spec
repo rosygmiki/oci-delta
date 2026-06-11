@@ -29,10 +29,6 @@ Source0:        %{gosource}
 Source1:        %{archivename}-vendor.tar.bz2
 
 BuildRequires:  go-rpm-macros
-BuildRequires:  btrfs-progs-devel
-BuildRequires:  device-mapper-devel
-BuildRequires:  glib2-devel
-BuildRequires:  gpgme-devel
 BuildRequires:  ostree-devel
 BuildRequires:  pkgconfig
 
