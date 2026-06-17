@@ -2,7 +2,7 @@
 
 COVERDIR ?= $(CURDIR)/.coverdata
 
-VERSION := 0.1.0
+VERSION := 0.99.999
 
 build:
 	go build
@@ -42,12 +42,24 @@ RPM_SPECFILE = $(RPM_PKGDIR)/oci-delta.spec
 RPM_TOML = $(RPM_PKGDIR)/go-vendor-tools.toml
 RPM_TOPDIR = $(CURDIR)/rpmbuild
 
+VENDOR_TAR = $(RPM_PKGDIR)/oci-delta-$(VERSION)-vendor.tar.bz2
+
 .PHONY: vendor-tarball
 vendor-tarball:
 	git archive --prefix=oci-delta-$(VERSION)/ HEAD | gzip > $(RPM_PKGDIR)/oci-delta-$(VERSION).tar.gz
-	go mod vendor
-	tar cjf $(RPM_PKGDIR)/oci-delta-$(VERSION)-vendor.tar.bz2 vendor/
-	rm -rf vendor/
+	go_vendor_archive create \
+		-c $(RPM_TOML) \
+		$(RPM_SPECFILE)
+	$(eval TMPDIR := $(shell mktemp -d))
+	tar xf $(VENDOR_TAR) -C $(TMPDIR)
+	go_vendor_license \
+		-c $(RPM_TOML) \
+		-C $(RPM_SPECFILE) \
+		report \
+		--verify-spec \
+		> $(TMPDIR)/vendor/LICENSE-BREAKDOWN.txt
+	tar cjf $(VENDOR_TAR) -C $(TMPDIR) vendor
+	rm -rf $(TMPDIR)
 
 .PHONY: srpm
 srpm: vendor-tarball
