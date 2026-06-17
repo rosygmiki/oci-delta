@@ -1,7 +1,6 @@
 /oci-delta
 rpmbuild/
 .claude/
-.github/
 vendor/
 
 

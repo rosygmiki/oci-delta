@@ -18,6 +18,18 @@ jobs:
         run: |
           test -z "$(gofmt -l .)" || (gofmt -d . && exit 1)
 
+  vet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y libglib2.0-dev libgpgme-dev libbtrfs-dev libdevmapper-dev libostree-dev
+      - name: Run go vet
+        run: go vet ./...
+
   test:
     runs-on: ubuntu-latest
     steps:
