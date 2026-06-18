@@ -3,6 +3,8 @@ rpmbuild/
 .claude/
 vendor/
 
+# Generated man page
+docs/man/oci-delta.1
 
 *.bz2
 *.gz
