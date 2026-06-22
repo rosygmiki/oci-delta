@@ -1,4 +1,4 @@
-.PHONY: build clean test test-coverage fmt
+.PHONY: build clean test test-coverage fmt man
 
 COVERDIR ?= $(CURDIR)/.coverdata
 
@@ -7,8 +7,12 @@ VERSION := 0.99.999
 build:
 	go build
 
+man:
+	go-md2man -in docs/man/oci-delta.1.md -out docs/man/oci-delta.1
+
 clean:
 	rm -f oci-delta
+	rm -f docs/man/oci-delta.1
 	rm -rf $(COVERDIR)
 	rm -rf $(CURDIR)/rpmbuild
 	rm -f build/package/rpm/*-vendor.tar.bz2
