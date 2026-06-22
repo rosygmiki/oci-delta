@@ -37,7 +37,7 @@ jobs:
   test-fedora:
     runs-on: ubuntu-latest
     container:
-      image: fedora:latest
+      image: fedora:44
       options: --privileged
     steps:
       - uses: actions/checkout@v4
